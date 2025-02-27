@@ -14,7 +14,7 @@ const Hero = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           {/* Hero content */}
           <div className="flex-1 text-center lg:text-left max-w-3xl mx-auto lg:mx-0">
-            <div className="inline-block mb-6 rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary animate-pulse">
+            <div className="inline-block mb-6 rounded-full bg-primary/10 px-4 py-2 text-base md:text-lg font-medium text-primary animate-pulse">
               Simplifying Turkish imports for global businesses
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6 text-balance">
