@@ -1,5 +1,5 @@
 
-import { ChevronRight, BarChart3, Layers, Cog, Upload, Database, PieChart, Users, TrendingUp } from "lucide-react";
+import { ChevronRight, BarChart3, Layers, Cog, Upload, Database, PieChart, Users, TrendingUp, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Features = () => {
@@ -151,25 +151,25 @@ const Features = () => {
           
           <div className="bg-card rounded-xl border border-border p-6 md:p-8 transition-all hover:shadow-md hover:border-primary/20">
             <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center">
-              <Users className="h-6 w-6 text-primary" />
+              <CreditCard className="h-6 w-6 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-3">Admin Controls</h3>
+            <h3 className="text-xl font-semibold mb-3">Payment Consolidation</h3>
             <p className="text-muted-foreground mb-6">
-              Powerful tools for administrators to manage users, update tracking information, 
-              and oversee all operations in one centralized dashboard.
+              Simplify your finances by consolidating payments to multiple Turkish vendors into a single transaction, 
+              saving time and reducing transfer fees.
             </p>
             <ul className="space-y-2 mb-6">
               <li className="flex items-center gap-2 text-sm">
                 <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Role-based access control</span>
+                <span>Single payment for multiple vendors</span>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Shipment status updates</span>
+                <span>Reduced international transfer fees</span>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Analytics and reporting</span>
+                <span>Simplified payment tracking</span>
               </li>
             </ul>
           </div>
