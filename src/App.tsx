@@ -4,8 +4,22 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/context/AuthContext";
+import AuthGuard from "@/components/AuthGuard";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import DashboardPage from "./pages/DashboardPage";
+import ShipmentsPage from "./pages/ShipmentsPage";
+import VendorsPage from "./pages/VendorsPage";
+import ContainersPage from "./pages/ContainersPage";
+import DocumentsPage from "./pages/DocumentsPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import BlogListPage from "./pages/BlogListPage";
+import BlogEditorPage from "./pages/BlogEditorPage";
+import BlogDetailPage from "./pages/BlogDetailPage";
+import BlogListPublicPage from "./pages/BlogListPublicPage";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -26,13 +40,98 @@ const App = () => {
         <Sonner position="top-right" />
         
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            {/* Additional routes will be added here */}
-            
-            {/* Catch-all route for 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              
+              {/* Auth Routes */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              
+              {/* Blog Public Routes */}
+              <Route path="/blog" element={<BlogListPublicPage />} />
+              <Route path="/blog/:id" element={<BlogDetailPage />} />
+              
+              {/* Dashboard Routes - Authenticated */}
+              <Route 
+                path="/dashboard" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <DashboardPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/shipments" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <ShipmentsPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/vendors" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <VendorsPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/containers" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <ContainersPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/documents" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <DocumentsPage />
+                  </AuthGuard>
+                } 
+              />
+              
+              {/* Admin Routes */}
+              <Route 
+                path="/dashboard/admin" 
+                element={
+                  <AuthGuard requireAuth={true} requireAdmin={true}>
+                    <AdminDashboard />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/blog" 
+                element={
+                  <AuthGuard requireAuth={true} requireAdmin={true}>
+                    <BlogListPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/blog/new" 
+                element={
+                  <AuthGuard requireAuth={true} requireAdmin={true}>
+                    <BlogEditorPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/blog/:id/edit" 
+                element={
+                  <AuthGuard requireAuth={true} requireAdmin={true}>
+                    <BlogEditorPage />
+                  </AuthGuard>
+                } 
+              />
+              
+              {/* Catch-all route for 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
