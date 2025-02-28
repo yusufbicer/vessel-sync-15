@@ -333,9 +333,9 @@ const AdminDashboard = () => {
                                 <Badge
                                   variant={
                                     shipment.status === 'delivered'
-                                      ? 'success'
+                                      ? 'default'
                                       : ['in_transit', 'customs'].includes(shipment.status)
-                                      ? 'warning'
+                                      ? 'secondary'
                                       : 'outline'
                                   }
                                 >
@@ -407,7 +407,7 @@ const AdminDashboard = () => {
                                 <Badge
                                   variant={
                                     post.status === 'published'
-                                      ? 'success'
+                                      ? 'default'
                                       : post.status === 'draft'
                                       ? 'outline'
                                       : 'secondary'
