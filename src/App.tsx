@@ -20,6 +20,10 @@ import BlogListPage from "./pages/BlogListPage";
 import BlogEditorPage from "./pages/BlogEditorPage";
 import BlogDetailPage from "./pages/BlogDetailPage";
 import BlogListPublicPage from "./pages/BlogListPublicPage";
+import NewShipmentPage from "./pages/NewShipmentPage";
+import NewVendorPage from "./pages/NewVendorPage";
+import NewDocumentPage from "./pages/NewDocumentPage";
+import UserSettingsPage from "./pages/UserSettingsPage";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -70,10 +74,26 @@ const App = () => {
                 } 
               />
               <Route 
+                path="/dashboard/shipments/new" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <NewShipmentPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
                 path="/dashboard/vendors" 
                 element={
                   <AuthGuard requireAuth={true}>
                     <VendorsPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/vendors/new" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <NewVendorPage />
                   </AuthGuard>
                 } 
               />
@@ -90,6 +110,22 @@ const App = () => {
                 element={
                   <AuthGuard requireAuth={true}>
                     <DocumentsPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/documents/new" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <NewDocumentPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/dashboard/settings" 
+                element={
+                  <AuthGuard requireAuth={true}>
+                    <UserSettingsPage />
                   </AuthGuard>
                 } 
               />

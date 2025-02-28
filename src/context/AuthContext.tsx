@@ -1,162 +1,166 @@
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { Session, User } from '@supabase/supabase-js';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
-interface AuthContextType {
-  session: Session | null;
-  user: User | null;
-  profile: any | null;
-  isLoading: boolean;
-  signUp: (email: string, password: string, userData: any) => Promise<{ error: any }>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
+type Profile = {
+  id: string;
+  full_name: string;
+  company_name: string;
+  email: string;
+  phone_number: string;
+  role: string | null;
+};
+
+type AuthContextType = {
+  user: any;
+  profile: Profile | null;
   isAdmin: boolean;
-}
+  isLoading: boolean;
+  signUp: (email: string, password: string, metadata?: any) => Promise<any>;
+  signIn: (email: string, password: string) => Promise<any>;
+  logout: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
+};
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  profile: null,
+  isAdmin: false,
+  isLoading: true,
+  signUp: async () => ({ user: null, error: null }),
+  signIn: async () => ({ user: null, error: null }),
+  logout: async () => {},
+  refreshProfile: async () => {},
+});
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<any | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    const initializeAuth = async () => {
+      setIsLoading(true);
+      
+      // Get session
+      const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
-        fetchProfile(session.user.id);
-      } else {
-        setIsLoading(false);
+        setUser(session.user);
+        await fetchUserProfile(session.user.id);
       }
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          fetchProfile(session.user.id);
-        } else {
+      
+      setIsLoading(false);
+      
+      // Listen for auth changes
+      const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          setUser(session.user);
+          await fetchUserProfile(session.user.id);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
           setProfile(null);
           setIsAdmin(false);
-          setIsLoading(false);
         }
-      }
-    );
-
-    return () => {
-      subscription.unsubscribe();
+      });
+      
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
     };
+    
+    initializeAuth();
   }, []);
-
-  const fetchProfile = async (userId: string) => {
+  
+  const fetchUserProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
-
+        
       if (error) throw error;
       
       setProfile(data);
       setIsAdmin(data.role === 'admin');
     } catch (error) {
-      console.error('Error fetching profile:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Error fetching user profile:', error);
     }
   };
-
-  const signUp = async (email: string, password: string, userData: any) => {
+  
+  const signUp = async (email: string, password: string, metadata = {}) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            full_name: userData.fullName,
-            company_name: userData.companyName,
-            phone_number: userData.phoneNumber,
-          }
-        }
+            full_name: metadata.fullName || '',
+            company_name: metadata.companyName || '',
+            phone_number: metadata.phoneNumber || '',
+          },
+        },
       });
-
-      if (error) {
-        toast.error(error.message);
-        return { error };
-      }
-
-      // Kayıt başarılı, profil verilerini insert etmeye gerek yok (bu trigger ile yapılıyor)
-      toast.success('Kayıt başarılı! Giriş yapabilirsiniz.');
-      navigate('/login');
-      return { error: null };
-    } catch (error: any) {
-      toast.error('Kayıt sırasında bir hata oluştu.');
-      return { error };
+      
+      return { user: data.user, error };
+    } catch (error) {
+      console.error('Error signing up:', error);
+      return { user: null, error };
     }
   };
-
+  
   const signIn = async (email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
-      if (error) {
-        toast.error(error.message);
-        return { error };
+      
+      if (!error) {
+        navigate('/dashboard');
       }
-
-      toast.success('Giriş başarılı!');
-      navigate('/dashboard');
-      return { error: null };
-    } catch (error: any) {
-      toast.error('Giriş sırasında bir hata oluştu.');
-      return { error };
+      
+      return { user: data.user, error };
+    } catch (error) {
+      console.error('Error signing in:', error);
+      return { user: null, error };
     }
   };
-
-  const signOut = async () => {
+  
+  const logout = async () => {
     try {
       await supabase.auth.signOut();
-      toast.success('Çıkış yapıldı');
-      navigate('/');
+      navigate('/login');
     } catch (error) {
-      toast.error('Çıkış yapılırken bir hata oluştu.');
-      console.error('Sign out error:', error);
+      console.error('Error signing out:', error);
     }
   };
-
-  const value = {
-    session,
-    user,
-    profile,
-    isLoading,
-    signUp,
-    signIn,
-    signOut,
-    isAdmin,
+  
+  const refreshProfile = async () => {
+    if (user) {
+      await fetchUserProfile(user.id);
+    }
   };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+  
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        profile,
+        isAdmin,
+        isLoading,
+        signUp,
+        signIn,
+        logout,
+        refreshProfile,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};

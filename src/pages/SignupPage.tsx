@@ -13,7 +13,6 @@ const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [companyName, setCompanyName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   
@@ -39,7 +38,7 @@ const SignupPage = () => {
       const { error } = await signUp(email, password, {
         fullName,
         companyName,
-        phoneNumber
+        phoneNumber: ''  // Basitleştirilmiş kayıt için telefon numarası boş bırakılır
       });
       
       if (error) {
@@ -70,29 +69,16 @@ const SignupPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Ad Soyad</Label>
-                  <Input
-                    id="fullName"
-                    type="text"
-                    placeholder="Ad Soyad"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phoneNumber">Telefon</Label>
-                  <Input
-                    id="phoneNumber"
-                    type="tel"
-                    placeholder="+90 5XX XXX XX XX"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    required
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="fullName">Ad Soyad</Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="Ad Soyad"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
