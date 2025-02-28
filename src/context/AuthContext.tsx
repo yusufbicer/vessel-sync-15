@@ -12,12 +12,19 @@ type Profile = {
   role: string | null;
 };
 
+interface MetadataTypes {
+  fullName?: string;
+  companyName?: string;
+  phoneNumber?: string;
+  [key: string]: any;
+}
+
 type AuthContextType = {
   user: any;
   profile: Profile | null;
   isAdmin: boolean;
   isLoading: boolean;
-  signUp: (email: string, password: string, metadata?: any) => Promise<any>;
+  signUp: (email: string, password: string, metadata?: MetadataTypes) => Promise<any>;
   signIn: (email: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -93,7 +100,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
   
-  const signUp = async (email: string, password: string, metadata = {}) => {
+  const signUp = async (email: string, password: string, metadata: MetadataTypes = {}) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,

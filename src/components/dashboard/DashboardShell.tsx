@@ -32,7 +32,7 @@ interface DashboardShellProps {
 }
 
 const DashboardShell = ({ children }: DashboardShellProps) => {
-  const { user, profile, signOut, isAdmin } = useAuth();
+  const { user, profile, logout, isAdmin } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
   };
 
   const handleLogout = async () => {
-    await signOut();
+    await logout();
   };
 
   return (
