@@ -9,7 +9,358 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      blog_posts: {
+        Row: {
+          author_id: string
+          author_name: string
+          category: string
+          content: string
+          created_at: string | null
+          excerpt: string
+          id: string
+          image_url: string
+          publish_date: string | null
+          read_time: string
+          status: string
+          title: string
+        }
+        Insert: {
+          author_id: string
+          author_name: string
+          category: string
+          content: string
+          created_at?: string | null
+          excerpt: string
+          id?: string
+          image_url?: string
+          publish_date?: string | null
+          read_time: string
+          status?: string
+          title: string
+        }
+        Update: {
+          author_id?: string
+          author_name?: string
+          category?: string
+          content?: string
+          created_at?: string | null
+          excerpt?: string
+          id?: string
+          image_url?: string
+          publish_date?: string | null
+          read_time?: string
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      containers: {
+        Row: {
+          actual_arrival: string | null
+          container_number: string
+          created_at: string | null
+          departure_date: string | null
+          estimated_arrival: string | null
+          id: string
+          notes: string | null
+          shipping_line: string
+          status: string
+          total_volume_capacity: number
+          used_volume: number | null
+          used_weight: number | null
+          vessel_name: string | null
+          weight_capacity: number
+        }
+        Insert: {
+          actual_arrival?: string | null
+          container_number: string
+          created_at?: string | null
+          departure_date?: string | null
+          estimated_arrival?: string | null
+          id?: string
+          notes?: string | null
+          shipping_line: string
+          status?: string
+          total_volume_capacity: number
+          used_volume?: number | null
+          used_weight?: number | null
+          vessel_name?: string | null
+          weight_capacity: number
+        }
+        Update: {
+          actual_arrival?: string | null
+          container_number?: string
+          created_at?: string | null
+          departure_date?: string | null
+          estimated_arrival?: string | null
+          id?: string
+          notes?: string | null
+          shipping_line?: string
+          status?: string
+          total_volume_capacity?: number
+          used_volume?: number | null
+          used_weight?: number | null
+          vessel_name?: string | null
+          weight_capacity?: number
+        }
+        Relationships: []
+      }
+      documents: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          document_type: string
+          file_name: string
+          file_url: string
+          id: string
+          shipment_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          document_type: string
+          file_name: string
+          file_url: string
+          id?: string
+          shipment_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          document_type?: string
+          file_name?: string
+          file_url?: string
+          id?: string
+          shipment_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "shipments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          account_balance: number | null
+          company_name: string
+          created_at: string | null
+          email: string
+          full_name: string
+          id: string
+          phone_number: string
+          role: string | null
+        }
+        Insert: {
+          account_balance?: number | null
+          company_name: string
+          created_at?: string | null
+          email: string
+          full_name: string
+          id: string
+          phone_number: string
+          role?: string | null
+        }
+        Update: {
+          account_balance?: number | null
+          company_name?: string
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          phone_number?: string
+          role?: string | null
+        }
+        Relationships: []
+      }
+      shipments: {
+        Row: {
+          actual_arrival: string | null
+          container_id: string | null
+          created_at: string | null
+          description: string
+          estimated_arrival: string | null
+          id: string
+          notes: string | null
+          order_number: string
+          proforma_invoice_url: string | null
+          status: string
+          tracking_number: string | null
+          user_id: string
+          vendor_id: string
+          volume: number
+          weight: number
+        }
+        Insert: {
+          actual_arrival?: string | null
+          container_id?: string | null
+          created_at?: string | null
+          description: string
+          estimated_arrival?: string | null
+          id?: string
+          notes?: string | null
+          order_number: string
+          proforma_invoice_url?: string | null
+          status?: string
+          tracking_number?: string | null
+          user_id: string
+          vendor_id: string
+          volume: number
+          weight: number
+        }
+        Update: {
+          actual_arrival?: string | null
+          container_id?: string | null
+          created_at?: string | null
+          description?: string
+          estimated_arrival?: string | null
+          id?: string
+          notes?: string | null
+          order_number?: string
+          proforma_invoice_url?: string | null
+          status?: string
+          tracking_number?: string | null
+          user_id?: string
+          vendor_id?: string
+          volume?: number
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipments_container_id_fkey"
+            columns: ["container_id"]
+            isOneToOne: false
+            referencedRelation: "containers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shipments_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tracking_updates: {
+        Row: {
+          created_at: string | null
+          id: string
+          location: string
+          notes: string | null
+          shipment_id: string
+          status: string
+          updated_by: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          location: string
+          notes?: string | null
+          shipment_id: string
+          status: string
+          updated_by: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          location?: string
+          notes?: string | null
+          shipment_id?: string
+          status?: string
+          updated_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tracking_updates_shipment_id_fkey"
+            columns: ["shipment_id"]
+            isOneToOne: false
+            referencedRelation: "shipments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          amount: number
+          balance_after: number
+          created_at: string | null
+          description: string
+          id: string
+          reference_number: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          created_at?: string | null
+          description: string
+          id?: string
+          reference_number?: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          created_at?: string | null
+          description?: string
+          id?: string
+          reference_number?: string | null
+          transaction_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vendors: {
+        Row: {
+          address: string
+          city: string
+          contact_person: string
+          country: string
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          notes: string | null
+          phone: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          city: string
+          contact_person: string
+          country: string
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          notes?: string | null
+          phone: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          contact_person?: string
+          country?: string
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
