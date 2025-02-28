@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,7 +45,7 @@ const NewShipmentPage = () => {
   });
 
   // Tedarikçileri yükle
-  useState(() => {
+  useEffect(() => {
     const loadVendors = async () => {
       if (!user) return;
       try {
@@ -63,7 +63,7 @@ const NewShipmentPage = () => {
     };
 
     loadVendors();
-  });
+  }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -96,6 +96,16 @@ const NewShipmentPage = () => {
         variant: 'destructive',
         title: 'Hata',
         description: 'Oturum açmanız gerekiyor.',
+      });
+      return;
+    }
+
+    // vendor_id'nin boş olup olmadığını kontrol et
+    if (!formData.vendor_id) {
+      toast({
+        variant: 'destructive',
+        title: 'Hata',
+        description: 'Lütfen bir tedarikçi seçin.',
       });
       return;
     }
@@ -176,13 +186,30 @@ const NewShipmentPage = () => {
                       <SelectValue placeholder="Tedarikçi seçin" />
                     </SelectTrigger>
                     <SelectContent>
-                      {vendors.map((vendor) => (
-                        <SelectItem key={vendor.id} value={vendor.id}>
-                          {vendor.name}
+                      {vendors.length > 0 ? (
+                        vendors.map((vendor) => (
+                          <SelectItem key={vendor.id} value={vendor.id}>
+                            {vendor.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value="" disabled>
+                          Henüz tedarikçi yok. Önce tedarikçi ekleyin.
                         </SelectItem>
-                      ))}
+                      )}
                     </SelectContent>
                   </Select>
+                  {vendors.length === 0 && (
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      <Button 
+                        variant="link" 
+                        className="h-auto p-0"
+                        onClick={() => navigate('/dashboard/vendors/new')}
+                      >
+                        Önce bir tedarikçi ekleyin
+                      </Button>
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
