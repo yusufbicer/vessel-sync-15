@@ -35,24 +35,24 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-x-8">
           <div className="flex items-center gap-6">
-            <Link
-              to="/#features"
+            <a
+              href="#features"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Features
-            </Link>
-            <Link
-              to="/#how-it-works"
+            </a>
+            <a
+              href="#how-it-works"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               How it works
-            </Link>
-            <Link
-              to="/#pricing"
+            </a>
+            <a
+              href="#blog"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              Pricing
-            </Link>
+              Blog
+            </a>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
@@ -85,27 +85,27 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="fixed inset-0 z-40 bg-background pt-24 px-4 animate-fade-in md:hidden">
           <nav className="flex flex-col gap-6">
-            <Link
-              to="/#features"
+            <a
+              href="#features"
               className="text-xl font-medium py-2 border-b border-border"
               onClick={() => setIsMenuOpen(false)}
             >
               Features
-            </Link>
-            <Link
-              to="/#how-it-works"
+            </a>
+            <a
+              href="#how-it-works"
               className="text-xl font-medium py-2 border-b border-border"
               onClick={() => setIsMenuOpen(false)}
             >
               How it works
-            </Link>
-            <Link
-              to="/#pricing"
+            </a>
+            <a
+              href="#blog"
               className="text-xl font-medium py-2 border-b border-border"
               onClick={() => setIsMenuOpen(false)}
             >
-              Pricing
-            </Link>
+              Blog
+            </a>
             <div className="flex flex-col gap-4 mt-6">
               <Button variant="outline" asChild className="w-full">
                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>

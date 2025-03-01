@@ -1,5 +1,5 @@
 
-import { ChevronRight, BarChart3, Layers, Cog, Upload, Database, PieChart, Users, TrendingUp, CreditCard } from "lucide-react";
+import { ChevronRight, BarChart3, Layers, Upload, Database, TrendingUp, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Features = () => {
@@ -11,9 +11,6 @@ const Features = () => {
       
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
-          <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-6">
-            Powerful Features
-          </div>
           <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-6">
             Everything you need to manage your Turkish imports
           </h2>
@@ -23,15 +20,15 @@ const Features = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-card rounded-xl border border-border p-6 md:p-8 transition-all hover:shadow-md hover:border-primary/20">
-            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-card rounded-xl border border-border p-8 transition-all hover:shadow-md hover:border-primary/20 group">
+            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <Database className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-3">Vendor Management</h3>
             <p className="text-muted-foreground mb-6">
               Store and manage all your Turkish vendors in one place. Quickly access vendor information 
-              and historical shipment data for easier ordering.
+              and historical shipment data.
             </p>
             <ul className="space-y-2 mb-6">
               <li className="flex items-center gap-2 text-sm">
@@ -49,14 +46,14 @@ const Features = () => {
             </ul>
           </div>
           
-          <div className="bg-card rounded-xl border border-border p-6 md:p-8 transition-all hover:shadow-md hover:border-primary/20">
-            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center">
+          <div className="bg-card rounded-xl border border-border p-8 transition-all hover:shadow-md hover:border-primary/20 group">
+            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <Layers className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-3">Container Optimization</h3>
             <p className="text-muted-foreground mb-6">
               Maximize container space usage with AI-powered optimization. Visualize how shipments 
-              fit together to reduce waste and lower costs.
+              fit together to reduce costs.
             </p>
             <ul className="space-y-2 mb-6">
               <li className="flex items-center gap-2 text-sm">
@@ -74,14 +71,14 @@ const Features = () => {
             </ul>
           </div>
           
-          <div className="bg-card rounded-xl border border-border p-6 md:p-8 transition-all hover:shadow-md hover:border-primary/20">
-            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center">
+          <div className="bg-card rounded-xl border border-border p-8 transition-all hover:shadow-md hover:border-primary/20 group">
+            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <Upload className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-3">Document Management</h3>
             <p className="text-muted-foreground mb-6">
               Upload and manage all import documents digitally. Track proforma invoices, 
-              customs forms, and shipping documents in one secure platform.
+              customs forms, and shipping documents.
             </p>
             <ul className="space-y-2 mb-6">
               <li className="flex items-center gap-2 text-sm">
@@ -99,14 +96,14 @@ const Features = () => {
             </ul>
           </div>
           
-          <div className="bg-card rounded-xl border border-border p-6 md:p-8 transition-all hover:shadow-md hover:border-primary/20">
-            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center">
+          <div className="bg-card rounded-xl border border-border p-8 transition-all hover:shadow-md hover:border-primary/20 group">
+            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <TrendingUp className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-3">Real-time Tracking</h3>
             <p className="text-muted-foreground mb-6">
               Monitor every step of your shipment journey with real-time tracking. Get instant 
-              notifications on status changes and potential delays.
+              notifications on status changes.
             </p>
             <ul className="space-y-2 mb-6">
               <li className="flex items-center gap-2 text-sm">
@@ -124,38 +121,38 @@ const Features = () => {
             </ul>
           </div>
           
-          <div className="bg-card rounded-xl border border-border p-6 md:p-8 transition-all hover:shadow-md hover:border-primary/20">
-            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center">
-              <PieChart className="h-6 w-6 text-primary" />
+          <div className="bg-card rounded-xl border border-border p-8 transition-all hover:shadow-md hover:border-primary/20 group">
+            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <BarChart3 className="h-6 w-6 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-3">Financial Dashboard</h3>
+            <h3 className="text-xl font-semibold mb-3">Analytics Dashboard</h3>
             <p className="text-muted-foreground mb-6">
-              View your account balance and financial history at a glance. Track payments, 
-              outstanding invoices, and projected costs in one place.
+              Gain insights into your import operations with comprehensive analytics. 
+              Track costs, volumes, and performance metrics.
             </p>
             <ul className="space-y-2 mb-6">
               <li className="flex items-center gap-2 text-sm">
                 <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Current account balance</span>
+                <span>Cost analysis by shipment</span>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Payment history</span>
+                <span>Volume utilization reports</span>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Cost forecasting</span>
+                <span>Performance benchmarking</span>
               </li>
             </ul>
           </div>
           
-          <div className="bg-card rounded-xl border border-border p-6 md:p-8 transition-all hover:shadow-md hover:border-primary/20">
-            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center">
+          <div className="bg-card rounded-xl border border-border p-8 transition-all hover:shadow-md hover:border-primary/20 group">
+            <div className="h-12 w-12 rounded-full bg-primary/10 mb-6 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <CreditCard className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-3">Payment Consolidation</h3>
             <p className="text-muted-foreground mb-6">
-              Simplify your finances by consolidating payments to multiple Turkish vendors into a single transaction, 
+              Simplify your finances by consolidating payments to multiple Turkish vendors, 
               saving time and reducing transfer fees.
             </p>
             <ul className="space-y-2 mb-6">
@@ -176,7 +173,7 @@ const Features = () => {
         </div>
         
         <div className="mt-16 text-center">
-          <Button size="lg" asChild>
+          <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-white">
             <a href="#how-it-works" className="flex items-center gap-1 mx-auto">
               See how it works <ChevronRight className="h-4 w-4" />
             </a>
