@@ -1,6 +1,7 @@
 
 import { ChevronRight, BarChart3, Layers, Cog, Upload, Database, PieChart, Users, TrendingUp, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Features = () => {
   return (
@@ -11,9 +12,6 @@ const Features = () => {
       
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
-          <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-6">
-            Powerful Features
-          </div>
           <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-6">
             Everything you need to manage your Turkish imports
           </h2>
@@ -42,10 +40,6 @@ const Features = () => {
                 <ChevronRight className="h-4 w-4 text-primary" />
                 <span>Historical order tracking</span>
               </li>
-              <li className="flex items-center gap-2 text-sm">
-                <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Vendor performance analytics</span>
-              </li>
             </ul>
           </div>
           
@@ -66,10 +60,6 @@ const Features = () => {
               <li className="flex items-center gap-2 text-sm">
                 <ChevronRight className="h-4 w-4 text-primary" />
                 <span>AI-driven space allocation</span>
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Volumetric tracking</span>
               </li>
             </ul>
           </div>
@@ -92,10 +82,6 @@ const Features = () => {
                 <ChevronRight className="h-4 w-4 text-primary" />
                 <span>Proforma invoice upload</span>
               </li>
-              <li className="flex items-center gap-2 text-sm">
-                <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Document sharing with customs</span>
-              </li>
             </ul>
           </div>
           
@@ -116,10 +102,6 @@ const Features = () => {
               <li className="flex items-center gap-2 text-sm">
                 <ChevronRight className="h-4 w-4 text-primary" />
                 <span>Automated notifications</span>
-              </li>
-              <li className="flex items-center gap-2 text-sm">
-                <ChevronRight className="h-4 w-4 text-primary" />
-                <span>GPS container tracking</span>
               </li>
             </ul>
           </div>
@@ -142,10 +124,6 @@ const Features = () => {
                 <ChevronRight className="h-4 w-4 text-primary" />
                 <span>Payment history</span>
               </li>
-              <li className="flex items-center gap-2 text-sm">
-                <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Cost forecasting</span>
-              </li>
             </ul>
           </div>
           
@@ -167,19 +145,15 @@ const Features = () => {
                 <ChevronRight className="h-4 w-4 text-primary" />
                 <span>Reduced international transfer fees</span>
               </li>
-              <li className="flex items-center gap-2 text-sm">
-                <ChevronRight className="h-4 w-4 text-primary" />
-                <span>Simplified payment tracking</span>
-              </li>
             </ul>
           </div>
         </div>
         
         <div className="mt-16 text-center">
           <Button size="lg" asChild>
-            <a href="#how-it-works" className="flex items-center gap-1 mx-auto">
+            <Link to="#how-it-works" className="flex items-center gap-1 mx-auto">
               See how it works <ChevronRight className="h-4 w-4" />
-            </a>
+            </Link>
           </Button>
         </div>
       </div>
