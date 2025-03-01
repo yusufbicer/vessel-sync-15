@@ -1,6 +1,5 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 type Profile = {
@@ -49,6 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -65,6 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       // Listen for auth changes
       const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.id);
         if (event === 'SIGNED_IN' && session?.user) {
           setUser(session.user);
           await fetchUserProfile(session.user.id);
@@ -91,8 +92,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .eq('id', userId)
         .single();
         
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching profile:', error);
+        throw error;
+      }
       
+      console.log('Fetched profile:', data);
       setProfile(data);
       setIsAdmin(data.role === 'admin');
     } catch (error) {
@@ -153,6 +158,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await fetchUserProfile(user.id);
     }
   };
+
+  // Keep session active when navigating to the main page
+  useEffect(() => {
+    if (location.pathname === '/' && user) {
+      console.log('User is logged in and on the landing page');
+      // We intentionally do nothing here to keep the session active
+    }
+  }, [location.pathname, user]);
   
   return (
     <AuthContext.Provider
@@ -171,3 +184,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </AuthContext.Provider>
   );
 };
+
+export default AuthContext;

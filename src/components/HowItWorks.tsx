@@ -1,16 +1,13 @@
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Box, Cube, BarChart3 } from "lucide-react";
 
 const HowItWorks = () => {
   return (
     <section id="how-it-works" className="py-20 md:py-32 bg-card">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
-          <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-6">
-            Simplified Process
-          </div>
           <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-6">
-            How Groop consolidation works
+            How It Works
           </h2>
           <p className="text-lg text-muted-foreground">
             Our platform makes consolidating Turkish imports simple and efficient, with a
@@ -116,10 +113,44 @@ const HowItWorks = () => {
             
             <div className="lg:col-span-1">
               <div className="h-full flex items-center justify-center">
-                <div className="relative w-full max-w-sm aspect-square">
-                  <div className="absolute inset-0 bg-primary/20 rounded-xl"></div>
-                  <div className="absolute inset-0 flex items-center justify-center text-primary font-medium">
-                    Container visualization preview
+                <div className="relative w-full max-w-sm aspect-square p-4 border border-primary/30 rounded-xl bg-background">
+                  <div className="absolute inset-0 rounded-xl overflow-hidden flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-primary/5 to-primary/20 p-6">
+                      <div className="relative h-full w-full flex flex-col items-center justify-center">
+                        {/* Container outline */}
+                        <div className="w-full h-full border-2 border-primary/40 rounded-md relative flex items-center justify-center">
+                          {/* Container items */}
+                          <div className="absolute top-[10%] left-[15%] w-[30%] h-[25%] bg-primary/30 rounded-sm border border-primary/60 flex items-center justify-center">
+                            <Box className="h-8 w-8 text-primary/70" />
+                          </div>
+                          <div className="absolute top-[40%] left-[20%] w-[25%] h-[35%] bg-primary/40 rounded-sm border border-primary/60 flex items-center justify-center">
+                            <Cube className="h-8 w-8 text-primary/70" />
+                          </div>
+                          <div className="absolute top-[20%] right-[15%] w-[35%] h-[30%] bg-primary/25 rounded-sm border border-primary/60 flex items-center justify-center">
+                            <Box className="h-10 w-10 text-primary/70" />
+                          </div>
+                          <div className="absolute bottom-[15%] right-[20%] w-[40%] h-[25%] bg-primary/35 rounded-sm border border-primary/60 flex items-center justify-center">
+                            <Cube className="h-8 w-8 text-primary/70" />
+                          </div>
+                          
+                          {/* Usage meter */}
+                          <div className="absolute -bottom-10 left-0 right-0 flex items-center justify-center">
+                            <div className="text-xs text-primary/80 font-semibold">85% utilized</div>
+                          </div>
+                          
+                          {/* 3D effect lines */}
+                          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-primary/40"></div>
+                          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-primary/40"></div>
+                          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-primary/40"></div>
+                          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-primary/40"></div>
+                        </div>
+                        
+                        {/* Analytics overlay */}
+                        <div className="absolute -top-3 -right-3 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30">
+                          <BarChart3 className="h-5 w-5 text-primary" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

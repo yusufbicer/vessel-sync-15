@@ -1,5 +1,5 @@
 
-import { useState, ReactNode } from 'react';
+import { useState, ReactNode, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ import {
   LogOut,
   User,
   ChevronRight,
+  ChevronDown,
 } from 'lucide-react';
 
 interface DashboardShellProps {
@@ -34,8 +35,20 @@ interface DashboardShellProps {
 const DashboardShell = ({ children }: DashboardShellProps) => {
   const { user, profile, logout, isAdmin } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkMobileView = () => {
+      setIsMobileView(window.innerWidth < 1024);
+    };
+    
+    checkMobileView();
+    window.addEventListener('resize', checkMobileView);
+    
+    return () => window.removeEventListener('resize', checkMobileView);
+  }, []);
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
@@ -92,7 +105,7 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
           </button>
         </div>
 
-        <div className="flex flex-col gap-1 px-2 py-4">
+        <div className="flex flex-col gap-1 px-2 py-4 overflow-y-auto max-h-[calc(100vh-4rem)]">
           {navigation.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -108,7 +121,7 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
                 onClick={closeSidebar}
               >
                 <Icon className="h-5 w-5" />
-                {item.name}
+                <span className="truncate">{item.name}</span>
                 {active && (
                   <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
                 )}
@@ -128,6 +141,35 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
           >
             <Menu className="h-5 w-5" />
           </button>
+
+          {/* Mobile Navigation Menu */}
+          {isMobileView && (
+            <div className="flex-1 px-2 lg:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="h-8 w-full justify-between px-2 text-sm">
+                    <span className="truncate">
+                      {navigation.find(item => isActive(item.href))?.name || 'Navigation'}
+                    </span>
+                    <ChevronDown className="h-4 w-4 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-52">
+                  {navigation.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <DropdownMenuItem key={item.name} asChild>
+                        <Link to={item.href} className="flex items-center gap-2">
+                          <Icon className="h-4 w-4" />
+                          <span className="truncate">{item.name}</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
 
           <div className="flex items-center gap-4">
             <DropdownMenu>

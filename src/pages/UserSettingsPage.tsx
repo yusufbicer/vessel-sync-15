@@ -37,7 +37,7 @@ const UserSettingsPage = () => {
     confirmPassword: '',
   });
 
-  // Kullanıcı bilgilerini yükle
+  // Load user information
   useEffect(() => {
     if (profile) {
       setUserInfo({
@@ -80,7 +80,15 @@ const UserSettingsPage = () => {
     try {
       setIsLoading(true);
 
-      const { error } = await supabase
+      // Log the update attempt for debugging
+      console.log('Attempting to update profile with data:', {
+        full_name: userInfo.full_name,
+        company_name: userInfo.company_name,
+        phone_number: userInfo.phone_number,
+        userId: user.id
+      });
+
+      const { data, error } = await supabase
         .from('profiles')
         .update({
           full_name: userInfo.full_name,
@@ -89,9 +97,14 @@ const UserSettingsPage = () => {
         })
         .eq('id', user.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
-      // Profil bilgilerini yenile
+      console.log('Profile update response:', data);
+
+      // Refresh profile information
       await refreshProfile();
 
       toast({
@@ -154,7 +167,7 @@ const UserSettingsPage = () => {
         description: 'Şifreniz başarıyla güncellendi.',
       });
 
-      // Şifre formunu temizle
+      // Clear password form
       setPasswordData({
         currentPassword: '',
         newPassword: '',
