@@ -20,7 +20,7 @@ const Navbar = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/80 backdrop-blur-md py-3 shadow-md"
+          ? "bg-background/80 backdrop-blur-md py-3 shadow-sm"
           : "bg-transparent py-6"
       }`}
     >
@@ -34,7 +34,7 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-x-8">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-7">
             <a
               href="#features"
               className="text-muted-foreground hover:text-foreground transition-colors"
@@ -58,7 +58,7 @@ const Navbar = () => {
             <Button variant="ghost" asChild>
               <Link to="/login">Log in</Link>
             </Button>
-            <Button asChild>
+            <Button asChild className="shadow-sm">
               <Link to="/signup" className="flex items-center gap-1">
                 Get started
                 <ChevronRight className="h-4 w-4" />
@@ -83,7 +83,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-background pt-24 px-4 animate-fade-in md:hidden">
+        <div className="fixed inset-0 z-40 bg-background/97 backdrop-blur-sm pt-24 px-4 animate-fade-in md:hidden">
           <nav className="flex flex-col gap-6">
             <a
               href="#features"
