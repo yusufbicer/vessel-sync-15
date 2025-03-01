@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { ArrowRight, Calendar, Clock } from "lucide-react";
+import { ArrowRight, Calendar, Clock, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,8 +28,8 @@ const Blog = () => {
         console.error('Blog posts loading error:', error);
         toast({
           variant: "destructive",
-          title: "Error",
-          description: "There was a problem loading blog posts.",
+          title: "Hata",
+          description: "Blog yazıları yüklenirken bir sorun oluştu.",
         });
       } finally {
         setIsLoading(false);
@@ -47,6 +47,9 @@ const Blog = () => {
       
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
+          <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-6">
+            Latest Insights
+          </div>
           <h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-6">
             The Import <span className="text-primary">Intelligence</span> Blog
           </h2>
@@ -55,12 +58,12 @@ const Blog = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {isLoading ? (
             // Loading skeletons
             Array(3).fill(0).map((_, index) => (
-              <div key={index} className="group relative flex flex-col h-full overflow-hidden backdrop-blur-sm rounded-2xl border border-border bg-card animate-pulse">
-                <div className="h-48 bg-muted rounded-t-2xl"></div>
+              <div key={index} className="group relative flex flex-col h-full overflow-hidden backdrop-blur-sm rounded-2xl border border-border bg-gradient-to-b from-card to-primary/5 animate-pulse">
+                <div className="h-48 bg-muted"></div>
                 <div className="p-6 space-y-4">
                   <div className="h-4 bg-muted rounded w-2/3"></div>
                   <div className="h-6 bg-muted rounded"></div>
@@ -71,16 +74,16 @@ const Blog = () => {
             ))
           ) : blogPosts.length > 0 ? (
             blogPosts.map((post) => (
-              <article key={post.id} className="group relative flex flex-col h-full overflow-hidden backdrop-blur-sm rounded-2xl border border-border bg-card hover:shadow-lg transition-all duration-300 hover:border-primary/20">
+              <article key={post.id} className="group relative flex flex-col h-full overflow-hidden backdrop-blur-sm rounded-2xl border border-border bg-gradient-to-b from-card to-primary/5 hover:shadow-lg transition-all duration-300">
                 {/* Featured Image */}
-                <div className="relative h-48 overflow-hidden rounded-t-2xl">
-                  <div className="absolute inset-0 bg-primary/20"></div>
+                <div className="relative h-48 overflow-hidden">
+                  <div className="absolute inset-0 bg-primary/20" />
                   <img 
                     src={post.image_url || '/placeholder.svg'} 
                     alt={post.title}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 left-4 bg-primary/80 backdrop-blur-sm text-white text-xs font-medium rounded-full px-3 py-1">
+                  <div className="absolute top-4 left-4 bg-primary text-white text-xs font-medium rounded-full px-3 py-1">
                     {post.category}
                   </div>
                 </div>
@@ -106,7 +109,12 @@ const Blog = () => {
                     {post.excerpt}
                   </p>
                   
-                  <div className="mt-auto flex justify-end">
+                  <div className="mt-auto flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-primary" />
+                      <span className="text-sm">{post.author_name}</span>
+                    </div>
+                    
                     <Link to={`/blog/${post.id}`} className="text-primary font-medium text-sm flex items-center hover:underline">
                       Read more <ArrowRight className="ml-1 h-4 w-4" />
                     </Link>
@@ -115,15 +123,37 @@ const Blog = () => {
               </article>
             ))
           ) : (
-            <div className="col-span-3 p-12 text-center bg-card rounded-2xl border border-border">
-              <h3 className="text-xl font-semibold mb-2">Coming Soon</h3>
-              <p className="text-muted-foreground">Our team is preparing insightful articles about Turkish imports and containerization.</p>
+            <div className="col-span-3 text-center py-20">
+              <p className="text-muted-foreground">No blog posts found. Check back soon!</p>
             </div>
           )}
         </div>
         
+        <div className="flex flex-col gap-8 mt-16 bg-card border border-border rounded-3xl overflow-hidden shadow-lg mx-auto max-w-5xl">
+          <div className="p-8 md:p-12 md:flex justify-between items-center gap-8">
+            <div className="md:w-2/3">
+              <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-4">
+                Admin Access Only
+              </div>
+              <h3 className="text-2xl md:text-3xl font-display font-bold mb-4">
+                Share Your Import Expertise
+              </h3>
+              <p className="text-muted-foreground mb-6 md:mb-0">
+                Have valuable insights about Turkish imports? As an admin, you can contribute to our knowledge base and help importers succeed.
+              </p>
+            </div>
+            <div className="md:w-1/3 flex justify-end">
+              <Button size="lg" asChild className="w-full md:w-auto bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 transition-opacity">
+                <Link to="/admin/blog/new" className="flex items-center gap-1 font-medium">
+                  Create Post <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+        
         <div className="mt-16 text-center">
-          <Button variant="outline" asChild size="lg" className="hover:bg-primary/5">
+          <Button variant="outline" asChild size="lg">
             <Link to="/blog" className="flex items-center gap-1 mx-auto">
               View all articles <ArrowRight className="h-4 w-4" />
             </Link>

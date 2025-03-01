@@ -20,7 +20,7 @@ const Navbar = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/80 backdrop-blur-md py-3 shadow-sm"
+          ? "bg-background/80 backdrop-blur-md py-3 shadow-md"
           : "bg-transparent py-6"
       }`}
     >
@@ -34,31 +34,31 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-x-8">
-          <div className="flex items-center gap-7">
-            <a
-              href="#features"
+          <div className="flex items-center gap-6">
+            <Link
+              to="/#features"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Features
-            </a>
-            <a
-              href="#how-it-works"
+            </Link>
+            <Link
+              to="/#how-it-works"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               How it works
-            </a>
-            <a
-              href="#blog"
+            </Link>
+            <Link
+              to="/#pricing"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              Blog
-            </a>
+              Pricing
+            </Link>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
               <Link to="/login">Log in</Link>
             </Button>
-            <Button asChild className="shadow-sm">
+            <Button asChild>
               <Link to="/signup" className="flex items-center gap-1">
                 Get started
                 <ChevronRight className="h-4 w-4" />
@@ -83,29 +83,29 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-background/97 backdrop-blur-sm pt-24 px-4 animate-fade-in md:hidden">
+        <div className="fixed inset-0 z-40 bg-background pt-24 px-4 animate-fade-in md:hidden">
           <nav className="flex flex-col gap-6">
-            <a
-              href="#features"
+            <Link
+              to="/#features"
               className="text-xl font-medium py-2 border-b border-border"
               onClick={() => setIsMenuOpen(false)}
             >
               Features
-            </a>
-            <a
-              href="#how-it-works"
+            </Link>
+            <Link
+              to="/#how-it-works"
               className="text-xl font-medium py-2 border-b border-border"
               onClick={() => setIsMenuOpen(false)}
             >
               How it works
-            </a>
-            <a
-              href="#blog"
+            </Link>
+            <Link
+              to="/#pricing"
               className="text-xl font-medium py-2 border-b border-border"
               onClick={() => setIsMenuOpen(false)}
             >
-              Blog
-            </a>
+              Pricing
+            </Link>
             <div className="flex flex-col gap-4 mt-6">
               <Button variant="outline" asChild className="w-full">
                 <Link to="/login" onClick={() => setIsMenuOpen(false)}>
