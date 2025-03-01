@@ -1,5 +1,5 @@
 
-import { ArrowRight, Box, Cube, BarChart3 } from "lucide-react";
+import { ArrowRight, Box, Package, BarChart3 } from "lucide-react";
 
 const HowItWorks = () => {
   return (
@@ -124,13 +124,13 @@ const HowItWorks = () => {
                             <Box className="h-8 w-8 text-primary/70" />
                           </div>
                           <div className="absolute top-[40%] left-[20%] w-[25%] h-[35%] bg-primary/40 rounded-sm border border-primary/60 flex items-center justify-center">
-                            <Cube className="h-8 w-8 text-primary/70" />
+                            <Package className="h-8 w-8 text-primary/70" />
                           </div>
                           <div className="absolute top-[20%] right-[15%] w-[35%] h-[30%] bg-primary/25 rounded-sm border border-primary/60 flex items-center justify-center">
                             <Box className="h-10 w-10 text-primary/70" />
                           </div>
                           <div className="absolute bottom-[15%] right-[20%] w-[40%] h-[25%] bg-primary/35 rounded-sm border border-primary/60 flex items-center justify-center">
-                            <Cube className="h-8 w-8 text-primary/70" />
+                            <Package className="h-8 w-8 text-primary/70" />
                           </div>
                           
                           {/* Usage meter */}
