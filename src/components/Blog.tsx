@@ -129,29 +129,6 @@ const Blog = () => {
           )}
         </div>
         
-        <div className="flex flex-col gap-8 mt-16 bg-card border border-border rounded-3xl overflow-hidden shadow-lg mx-auto max-w-5xl">
-          <div className="p-8 md:p-12 md:flex justify-between items-center gap-8">
-            <div className="md:w-2/3">
-              <div className="inline-block rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-4">
-                Admin Access Only
-              </div>
-              <h3 className="text-2xl md:text-3xl font-display font-bold mb-4">
-                Share Your Import Expertise
-              </h3>
-              <p className="text-muted-foreground mb-6 md:mb-0">
-                Have valuable insights about Turkish imports? As an admin, you can contribute to our knowledge base and help importers succeed.
-              </p>
-            </div>
-            <div className="md:w-1/3 flex justify-end">
-              <Button size="lg" asChild className="w-full md:w-auto bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 transition-opacity">
-                <Link to="/admin/blog/new" className="flex items-center gap-1 font-medium">
-                  Create Post <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-        
         <div className="mt-16 text-center">
           <Button variant="outline" asChild size="lg">
             <Link to="/blog" className="flex items-center gap-1 mx-auto">
