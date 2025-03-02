@@ -1,4 +1,3 @@
-
 import { useState, ReactNode, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -26,6 +25,7 @@ import {
   User,
   ChevronRight,
   ChevronDown,
+  FileEdit,
 } from 'lucide-react';
 
 interface DashboardShellProps {
@@ -40,6 +40,13 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (isAdmin && location.pathname === '/dashboard') {
+      console.log("DashboardShell: Admin user at regular dashboard, redirecting to admin dashboard");
+      navigate('/dashboard/admin');
+    }
+  }, [isAdmin, location.pathname, navigate]);
+
+  useEffect(() => {
     const checkMobileView = () => {
       setIsMobileView(window.innerWidth < 1024);
     };
@@ -51,7 +58,7 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
   }, []);
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { name: 'Dashboard', href: isAdmin ? '/dashboard/admin' : '/dashboard', icon: Home },
     { name: 'Sevkiyatlarım', href: '/dashboard/shipments', icon: Truck },
     { name: 'Tedarikçilerim', href: '/dashboard/vendors', icon: ShoppingBag },
     { name: 'Konteynırlar', href: '/dashboard/containers', icon: Package2 },
@@ -61,6 +68,12 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
       : []),
     { name: 'Ayarlar', href: '/dashboard/settings', icon: Settings },
   ];
+
+  if (isAdmin) {
+    navigation.push(
+      { name: 'Blog Yönetimi', href: '/dashboard/blog', icon: FileEdit }
+    );
+  }
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);

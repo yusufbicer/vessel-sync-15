@@ -1,6 +1,8 @@
+
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 type Profile = {
   id: string;
@@ -49,6 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const { toast } = useToast();
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -94,12 +97,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         
       if (error) {
         console.error('Error fetching profile:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Profil yüklenemedi',
+          description: 'Kullanıcı bilgileri alınırken bir hata oluştu.',
+        });
         throw error;
       }
       
       console.log('Fetched profile:', data);
       setProfile(data);
-      setIsAdmin(data.role === 'admin');
+      const userIsAdmin = data.role === 'admin';
+      setIsAdmin(userIsAdmin);
+      console.log('User is admin:', userIsAdmin);
+      
+      // Redirect admin to admin dashboard if on regular dashboard
+      if (userIsAdmin && location.pathname === '/dashboard') {
+        navigate('/dashboard/admin');
+      }
     } catch (error) {
       console.error('Error fetching user profile:', error);
     }
@@ -134,7 +149,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
       
       if (!error) {
-        navigate('/dashboard');
+        // We'll let the auth state change handle navigation based on role
+        // Successful login - fetchUserProfile will be called by the auth state change
       }
       
       return { user: data.user, error };
