@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import AuthGuard from "@/components/AuthGuard";
 import Index from "./pages/Index";
@@ -134,7 +134,7 @@ const App = () => {
               <Route 
                 path="/dashboard/admin" 
                 element={
-                  <AuthGuard requireAuth={true} requireAdmin={true} redirectTo="/dashboard">
+                  <AuthGuard requireAuth={true} requireAdmin={true}>
                     <AdminDashboard />
                   </AuthGuard>
                 } 
@@ -142,7 +142,7 @@ const App = () => {
               <Route 
                 path="/dashboard/blog" 
                 element={
-                  <AuthGuard requireAuth={true} requireAdmin={true} redirectTo="/dashboard">
+                  <AuthGuard requireAuth={true} requireAdmin={true}>
                     <BlogListPage />
                   </AuthGuard>
                 } 
@@ -150,7 +150,7 @@ const App = () => {
               <Route 
                 path="/dashboard/blog/new" 
                 element={
-                  <AuthGuard requireAuth={true} requireAdmin={true} redirectTo="/dashboard">
+                  <AuthGuard requireAuth={true} requireAdmin={true}>
                     <BlogEditorPage />
                   </AuthGuard>
                 } 
@@ -158,7 +158,7 @@ const App = () => {
               <Route 
                 path="/dashboard/blog/:id/edit" 
                 element={
-                  <AuthGuard requireAuth={true} requireAdmin={true} redirectTo="/dashboard">
+                  <AuthGuard requireAuth={true} requireAdmin={true}>
                     <BlogEditorPage />
                   </AuthGuard>
                 } 
@@ -175,4 +175,3 @@ const App = () => {
 };
 
 export default App;
-

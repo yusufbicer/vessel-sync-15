@@ -77,10 +77,8 @@ const ShipmentsPage = () => {
             volume,
             weight,
             tracking_number,
-            vendor_id,
-            container_id,
-            vendors(id, name),
-            containers(id, container_number)
+            vendors(name),
+            containers(container_number)
           `)
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
@@ -118,7 +116,7 @@ const ShipmentsPage = () => {
         (shipment) =>
           shipment.order_number.toLowerCase().includes(searchLower) ||
           shipment.description.toLowerCase().includes(searchLower) ||
-          (shipment.vendors?.name && shipment.vendors.name.toLowerCase().includes(searchLower)) ||
+          shipment.vendors.name.toLowerCase().includes(searchLower) ||
           (shipment.containers?.container_number &&
             shipment.containers.container_number.toLowerCase().includes(searchLower))
       );
@@ -256,7 +254,7 @@ const ShipmentsPage = () => {
                   <span>Filtrele</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-background border border-border shadow-md z-50">
+              <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>Duruma Göre Filtrele</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setFilter('all')}>
@@ -332,12 +330,12 @@ const ShipmentsPage = () => {
                           <TableCell className="text-right">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-8 w-8 p-0 relative z-10">
+                                <Button variant="ghost" className="h-8 w-8 p-0">
                                   <span className="sr-only">Menü aç</span>
                                   <MoreHorizontal className="h-4 w-4" />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="bg-background border border-border shadow-md z-50">
+                              <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>İşlemler</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem asChild>

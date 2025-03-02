@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -41,7 +41,6 @@ import {
 const AdminDashboard = () => {
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState({
     usersCount: 0,
@@ -54,17 +53,11 @@ const AdminDashboard = () => {
   const [recentBlogPosts, setRecentBlogPosts] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!isAdmin) {
-      navigate('/dashboard');
-      return;
-    }
-    
     const fetchAdminData = async () => {
       if (!user || !isAdmin) return;
 
       try {
         setIsLoading(true);
-        console.log("Fetching admin data...");
 
         // Fetch stats
         const { count: usersCount } = await supabase
@@ -90,8 +83,8 @@ const AdminDashboard = () => {
           .order('created_at', { ascending: false })
           .limit(5);
 
-        // Fetch recent shipments (all shipments for admin)
-        const { data: recentShipmentsData, error: shipmentsError } = await supabase
+        // Fetch recent shipments
+        const { data: recentShipmentsData } = await supabase
           .from('shipments')
           .select(`
             id,
@@ -103,10 +96,6 @@ const AdminDashboard = () => {
           `)
           .order('created_at', { ascending: false })
           .limit(5);
-
-        if (shipmentsError) {
-          console.error("Error fetching shipments:", shipmentsError);
-        }
 
         // Fetch recent blog posts
         const { data: recentBlogPostsData } = await supabase
@@ -125,12 +114,6 @@ const AdminDashboard = () => {
         setRecentUsers(recentUsersData || []);
         setRecentShipments(recentShipmentsData || []);
         setRecentBlogPosts(recentBlogPostsData || []);
-        
-        console.log("Admin data fetched:", { 
-          users: recentUsersData?.length,
-          shipments: recentShipmentsData?.length,
-          blogPosts: recentBlogPostsData?.length
-        });
 
       } catch (error) {
         console.error('Admin verisi yüklenirken hata:', error);
@@ -145,7 +128,7 @@ const AdminDashboard = () => {
     };
 
     fetchAdminData();
-  }, [user, isAdmin, toast, navigate]);
+  }, [user, isAdmin, toast]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('tr-TR');

@@ -1,7 +1,7 @@
 
 import { useEffect, ReactNode } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
 interface AuthGuardProps {
@@ -19,29 +19,16 @@ const AuthGuard = ({
 }: AuthGuardProps) => {
   const { user, isLoading, isAdmin } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     if (!isLoading) {
-      // Debug info
-      console.log("AuthGuard - User:", user?.email);
-      console.log("AuthGuard - Is Admin:", isAdmin);
-      console.log("AuthGuard - Require Admin:", requireAdmin);
-      console.log("AuthGuard - Current Path:", location.pathname);
-      
       if (requireAuth && !user) {
-        // Not authenticated, redirect to login
         navigate(redirectTo);
       } else if (requireAdmin && !isAdmin) {
-        // Not admin, redirect to dashboard
         navigate('/dashboard');
-      } else if (user && isAdmin && location.pathname === '/dashboard') {
-        // Admin user is at regular dashboard, redirect to admin dashboard
-        console.log("Redirecting admin to admin dashboard");
-        navigate('/dashboard/admin');
       }
     }
-  }, [user, isLoading, isAdmin, navigate, requireAuth, requireAdmin, redirectTo, location.pathname]);
+  }, [user, isLoading, isAdmin, navigate, requireAuth, requireAdmin, redirectTo]);
 
   if (isLoading) {
     return (
@@ -51,12 +38,12 @@ const AuthGuard = ({
     );
   }
 
-  // For auth required pages when user is not logged in
+  // Kimlik doğrulama gerektiren sayfalar için kullanıcı giriş yapmamışsa null döndür
   if (requireAuth && !user) {
     return null;
   }
 
-  // For admin required pages when user is not admin
+  // Admin gerektiren sayfalar için kullanıcı admin değilse null döndür
   if (requireAdmin && !isAdmin) {
     return null;
   }
