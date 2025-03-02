@@ -22,21 +22,23 @@ const AuthGuard = ({
 
   useEffect(() => {
     if (!isLoading) {
+      // Debug info
+      console.log("AuthGuard - User:", user?.email);
+      console.log("AuthGuard - Is Admin:", isAdmin);
+      console.log("AuthGuard - Require Admin:", requireAdmin);
+      
       if (requireAuth && !user) {
+        // Not authenticated, redirect to login
         navigate(redirectTo);
       } else if (requireAdmin && !isAdmin) {
+        // Not admin, redirect to dashboard
         navigate('/dashboard');
+      } else if (user && isAdmin && !requireAdmin && window.location.pathname === '/dashboard') {
+        // Admin user is at regular dashboard, redirect to admin dashboard
+        navigate('/dashboard/admin');
       }
     }
   }, [user, isLoading, isAdmin, navigate, requireAuth, requireAdmin, redirectTo]);
-
-  useEffect(() => {
-    // Debug for admin role
-    if (user && !isLoading) {
-      console.log("Auth Guard - User:", user.email);
-      console.log("Auth Guard - Is Admin:", isAdmin);
-    }
-  }, [user, isLoading, isAdmin]);
 
   if (isLoading) {
     return (

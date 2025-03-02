@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
@@ -39,8 +39,8 @@ const NewDocumentPage = () => {
     shipment_id: '',
   });
 
-  // Sevkiyatları yükle
-  useState(() => {
+  // Load shipments
+  useEffect(() => {
     const loadShipments = async () => {
       if (!user) return;
       try {
@@ -58,7 +58,7 @@ const NewDocumentPage = () => {
     };
 
     loadShipments();
-  });
+  }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -105,25 +105,28 @@ const NewDocumentPage = () => {
     try {
       setIsLoading(true);
 
-      // Dosya adını sanitize et
+      // Sanitize file name
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${crypto.randomUUID()}.${fileExt}`;
       
-      // Dosyayı Storage'a yükle
+      // Upload file to Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('documents')
         .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Storage error:', uploadError);
+        throw uploadError;
+      }
 
-      // Dosya URL'ini al
+      // Get file URL
       const { data: urlData } = await supabase.storage
         .from('documents')
         .getPublicUrl(fileName);
 
       const fileUrl = urlData.publicUrl;
 
-      // Belge kaydını veritabanına ekle
+      // Add document record to database
       const { data, error } = await supabase.from('documents').insert({
         document_type: formData.document_type,
         description: formData.description,
@@ -133,7 +136,10 @@ const NewDocumentPage = () => {
         user_id: user.id,
       }).select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
 
       toast({
         title: 'Başarılı',
@@ -141,12 +147,12 @@ const NewDocumentPage = () => {
       });
 
       navigate('/dashboard/documents');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Belge yüklenirken hata:', error);
       toast({
         variant: 'destructive',
         title: 'Hata',
-        description: 'Belge yüklenirken bir sorun oluştu.',
+        description: `Belge yüklenirken bir sorun oluştu: ${error.message || 'Bilinmeyen hata'}`,
       });
     } finally {
       setIsLoading(false);
