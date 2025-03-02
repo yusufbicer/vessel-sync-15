@@ -30,6 +30,14 @@ const AuthGuard = ({
     }
   }, [user, isLoading, isAdmin, navigate, requireAuth, requireAdmin, redirectTo]);
 
+  useEffect(() => {
+    // Debug for admin role
+    if (user && !isLoading) {
+      console.log("Auth Guard - User:", user.email);
+      console.log("Auth Guard - Is Admin:", isAdmin);
+    }
+  }, [user, isLoading, isAdmin]);
+
   if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -38,12 +46,12 @@ const AuthGuard = ({
     );
   }
 
-  // Kimlik doğrulama gerektiren sayfalar için kullanıcı giriş yapmamışsa null döndür
+  // For auth required pages when user is not logged in
   if (requireAuth && !user) {
     return null;
   }
 
-  // Admin gerektiren sayfalar için kullanıcı admin değilse null döndür
+  // For admin required pages when user is not admin
   if (requireAdmin && !isAdmin) {
     return null;
   }
