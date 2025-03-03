@@ -1,39 +1,27 @@
 
 import { useState, ReactNode, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Package,
-  Menu,
-  X,
   Home,
+  Menu,
   Truck,
   ShoppingBag,
   Package2,
   FileText,
   BarChart3,
   Settings,
-  LogOut,
-  User,
-  ChevronDown,
-  Loader2,
 } from 'lucide-react';
+import Sidebar from './Sidebar';
+import MobileNavigation from './MobileNavigation';
+import UserDropdownMenu from './UserDropdownMenu';
 
 interface DashboardShellProps {
   children: ReactNode;
 }
 
 const DashboardShell = ({ children }: DashboardShellProps) => {
-  const { user, profile, logout, isAdmin } = useAuth();
+  const { user, profile, logout, isAdmin, isLoading } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
   const location = useLocation();
@@ -62,10 +50,6 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
     { name: 'Ayarlar', href: '/dashboard/settings', icon: Settings },
   ];
 
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
-
   const isActive = (path: string) => {
     return location.pathname === path;
   };
@@ -74,62 +58,15 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
     await logout();
   };
 
+  const currentPageName = navigation.find(item => isActive(item.href))?.name || 'Navigation';
+
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Mobile Sidebar Backdrop */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
-          onClick={closeSidebar}
-        />
-      )}
-
-      {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r bg-background transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <div className="flex h-16 items-center justify-between border-b px-4">
-          <Link to="/" className="flex items-center gap-2 text-foreground group">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 transition-all group-hover:bg-primary/20">
-              <Package className="h-5 w-5 text-primary transition-all" />
-            </div>
-            <span className="font-display text-xl font-semibold">Groop</span>
-          </Link>
-          <button
-            className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
-            onClick={closeSidebar}
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="flex flex-col gap-1 px-2 py-4 overflow-y-auto max-h-[calc(100vh-4rem)]">
-          {navigation.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                  active
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                }`}
-                onClick={closeSidebar}
-              >
-                <Icon className="h-5 w-5" />
-                <span className="truncate">{item.name}</span>
-                {active && (
-                  <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
-                )}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
+      <Sidebar 
+        navigation={navigation} 
+        isSidebarOpen={isSidebarOpen} 
+        closeSidebar={() => setIsSidebarOpen(false)} 
+      />
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col lg:pl-64">
@@ -144,72 +81,19 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
 
           {/* Mobile Navigation Menu */}
           {isMobileView && (
-            <div className="flex-1 px-2 lg:hidden">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="h-8 w-full justify-between px-2 text-sm">
-                    <span className="truncate">
-                      {navigation.find(item => isActive(item.href))?.name || 'Navigation'}
-                    </span>
-                    <ChevronDown className="h-4 w-4 opacity-50" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-52">
-                  {navigation.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <DropdownMenuItem key={item.name} asChild>
-                        <Link to={item.href} className="flex items-center gap-2">
-                          <Icon className="h-4 w-4" />
-                          <span className="truncate">{item.name}</span>
-                        </Link>
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            <MobileNavigation 
+              navigation={navigation} 
+              currentPageName={currentPageName} 
+            />
           )}
 
           <div className="flex items-center gap-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center gap-2 text-base hover:bg-accent"
-                >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
-                    {profile?.full_name?.charAt(0) || user?.email?.charAt(0)}
-                  </div>
-                  <div className="hidden text-sm sm:block">
-                    <p className="font-medium">{profile?.full_name || user?.email}</p>
-                  </div>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>Hesabım</DropdownMenuLabel>
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard/profile" className="flex cursor-pointer items-center">
-                    <User className="mr-2 h-4 w-4" />
-                    Profil
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard/settings" className="flex cursor-pointer items-center">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Ayarlar
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="flex cursor-pointer items-center text-destructive focus:text-destructive"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Çıkış Yap
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserDropdownMenu 
+              profileName={profile?.full_name} 
+              email={user?.email}
+              initial={profile?.full_name?.charAt(0) || user?.email?.charAt(0) || '?'}
+              onLogout={handleLogout}
+            />
           </div>
         </header>
 
