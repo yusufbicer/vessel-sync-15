@@ -22,9 +22,13 @@ const AuthGuard = ({
 
   useEffect(() => {
     if (!isLoading) {
+      console.log("AuthGuard check - user:", !!user, "isAdmin:", isAdmin, "requireAuth:", requireAuth, "requireAdmin:", requireAdmin);
+      
       if (requireAuth && !user) {
+        console.log("Redirecting to login: no user but auth required");
         navigate(redirectTo);
       } else if (requireAdmin && !isAdmin) {
+        console.log("Redirecting to dashboard: admin required but user is not admin");
         navigate('/dashboard');
       }
     }
@@ -45,6 +49,7 @@ const AuthGuard = ({
 
   // Admin gerektiren sayfalar için kullanıcı admin değilse null döndür
   if (requireAdmin && !isAdmin) {
+    console.log("Rendering null: admin required but user is not admin");
     return null;
   }
 

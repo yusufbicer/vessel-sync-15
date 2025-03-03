@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -86,6 +87,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   
   const fetchUserProfile = async (userId: string) => {
     try {
+      console.log('Fetching profile for user ID:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -98,10 +100,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       
       console.log('Fetched profile:', data);
-      setProfile(data);
-      setIsAdmin(data.role === 'admin');
+      
+      if (data) {
+        setProfile(data);
+        // Explicitly check for 'admin' string
+        const isUserAdmin = data.role === 'admin';
+        console.log('Is user admin?', isUserAdmin, 'Role:', data.role);
+        setIsAdmin(isUserAdmin);
+      } else {
+        console.log('No profile data found');
+        setProfile(null);
+        setIsAdmin(false);
+      }
     } catch (error) {
       console.error('Error fetching user profile:', error);
+      setProfile(null);
+      setIsAdmin(false);
     }
   };
   

@@ -319,6 +319,39 @@ export type Database = {
         }
         Relationships: []
       }
+      users: {
+        Row: {
+          account_balance: number | null
+          company_name: string
+          created_at: string | null
+          email: string
+          full_name: string
+          id: string
+          phone_number: string
+          role: string | null
+        }
+        Insert: {
+          account_balance?: number | null
+          company_name: string
+          created_at?: string | null
+          email: string
+          full_name: string
+          id?: string
+          phone_number: string
+          role?: string | null
+        }
+        Update: {
+          account_balance?: number | null
+          company_name?: string
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          phone_number?: string
+          role?: string | null
+        }
+        Relationships: []
+      }
       vendors: {
         Row: {
           address: string
@@ -366,7 +399,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -30,12 +29,8 @@ import {
   BarChart3,
   FileText,
   FileEdit,
-  UserPlus,
   Plus,
   Loader2,
-  DollarSign,
-  TrendingUp,
-  ClipboardList,
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -53,9 +48,23 @@ const AdminDashboard = () => {
   const [recentBlogPosts, setRecentBlogPosts] = useState<any[]>([]);
 
   useEffect(() => {
+    console.log("AdminDashboard - Current user:", user?.id);
+    console.log("AdminDashboard - isAdmin:", isAdmin);
+    
     const fetchAdminData = async () => {
-      if (!user || !isAdmin) return;
+      if (!user) {
+        console.log("No user, skipping data fetch");
+        setIsLoading(false);
+        return;
+      }
+      
+      if (!isAdmin) {
+        console.log("User is not admin, skipping data fetch");
+        setIsLoading(false);
+        return;
+      }
 
+      console.log("Fetching admin data");
       try {
         setIsLoading(true);
 
@@ -63,6 +72,8 @@ const AdminDashboard = () => {
         const { count: usersCount } = await supabase
           .from('profiles')
           .select('id', { count: 'exact', head: true });
+
+        console.log("Fetched usersCount:", usersCount);
 
         const { count: shipmentsCount } = await supabase
           .from('shipments')
@@ -77,11 +88,17 @@ const AdminDashboard = () => {
           .select('id', { count: 'exact', head: true });
 
         // Fetch recent users
-        const { data: recentUsersData } = await supabase
+        const { data: recentUsersData, error: usersError } = await supabase
           .from('profiles')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(5);
+          
+        if (usersError) {
+          console.error("Error fetching users:", usersError);
+        } else {
+          console.log("Fetched users:", recentUsersData);
+        }
 
         // Fetch recent shipments
         const { data: recentShipmentsData } = await supabase
@@ -133,6 +150,8 @@ const AdminDashboard = () => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('tr-TR');
   };
+
+  console.log("AdminDashboard rendering - isAdmin:", isAdmin);
 
   if (!isAdmin) {
     return (

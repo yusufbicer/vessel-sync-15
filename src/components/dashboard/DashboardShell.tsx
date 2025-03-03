@@ -24,8 +24,8 @@ import {
   Settings,
   LogOut,
   User,
-  ChevronRight,
   ChevronDown,
+  Loader2,
 } from 'lucide-react';
 
 interface DashboardShellProps {
