@@ -14,8 +14,8 @@ const Hero = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           {/* Hero content */}
           <div className="flex-1 text-center lg:text-left max-w-3xl mx-auto lg:mx-0">
-            <div className="mb-8 inline-flex font-display font-bold px-6 py-3 text-lg md:text-xl rounded-xl bg-gradient-to-r from-primary/90 to-primary/60 text-white shadow-lg animate-float">
-              Simplifying Turkish imports for global businesses
+            <div className="mb-8 inline-flex font-display font-bold px-6 py-2.5 text-sm md:text-base rounded-xl bg-gradient-to-b from-[#9F9EA1] to-[#777777] text-white shadow-lg">
+              AI powered shipping consolidation for your Turkish imports
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6 text-balance">
               Your One-Stop Shop for{' '}
