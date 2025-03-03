@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,7 +18,7 @@ import DashboardShell from '@/components/dashboard/DashboardShell';
 import { User, Settings, Save, Key, Loader2, LogOut } from 'lucide-react';
 
 const UserSettingsPage = () => {
-  const { user, profile, logout, refreshProfile } = useAuth();
+  const { user, profile, logout, refreshProfile, updateProfile } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isPasswordChanging, setIsPasswordChanging] = useState(false);
@@ -37,7 +36,6 @@ const UserSettingsPage = () => {
     confirmPassword: '',
   });
 
-  // Load user information
   useEffect(() => {
     if (profile) {
       setUserInfo({
@@ -80,7 +78,6 @@ const UserSettingsPage = () => {
     try {
       setIsLoading(true);
 
-      // Log the update attempt for debugging
       console.log('Attempting to update profile with data:', {
         full_name: userInfo.full_name,
         company_name: userInfo.company_name,
@@ -88,23 +85,17 @@ const UserSettingsPage = () => {
         userId: user.id
       });
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .update({
-          full_name: userInfo.full_name,
-          company_name: userInfo.company_name,
-          phone_number: userInfo.phone_number,
-        })
-        .eq('id', user.id);
+      const { error } = await updateProfile({
+        full_name: userInfo.full_name,
+        company_name: userInfo.company_name,
+        phone_number: userInfo.phone_number,
+      });
 
       if (error) {
         console.error('Supabase error:', error);
         throw error;
       }
 
-      console.log('Profile update response:', data);
-
-      // Refresh profile information
       await refreshProfile();
 
       toast({
@@ -167,7 +158,6 @@ const UserSettingsPage = () => {
         description: 'Şifreniz başarıyla güncellendi.',
       });
 
-      // Clear password form
       setPasswordData({
         currentPassword: '',
         newPassword: '',

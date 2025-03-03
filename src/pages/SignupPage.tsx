@@ -16,7 +16,7 @@ const SignupPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   
-  const { signUp } = useAuth();
+  const { signup } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ const SignupPage = () => {
     setIsLoading(true);
     
     try {
-      const { error } = await signUp(email, password, {
+      const { error } = await signup(email, password, {
         fullName,
         companyName,
         phoneNumber: ''  // Basitleştirilmiş kayıt için telefon numarası boş bırakılır

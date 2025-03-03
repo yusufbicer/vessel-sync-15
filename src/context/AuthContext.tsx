@@ -37,6 +37,7 @@ interface AuthContextType {
     error: any | null;
     data: any | null;
   }>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -48,6 +49,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Function to fetch user profile data
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data: profileData, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return null;
+      }
+      
+      setProfile(profileData);
+      setIsAdmin(profileData?.role === 'admin');
+      console.log('User role:', profileData?.role);
+      console.log('Is admin:', profileData?.role === 'admin');
+      
+      return profileData;
+    } catch (error) {
+      console.error('Error in fetchUserProfile:', error);
+      return null;
+    }
+  };
+
+  // Function to refresh the user profile
+  const refreshProfile = async () => {
+    if (!user) return;
+    
+    try {
+      setIsLoading(true);
+      await fetchUserProfile(user.id);
+    } catch (error) {
+      console.error('Error refreshing profile:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const setData = async () => {
       try {
@@ -58,20 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         // Check if user is admin by fetching their profile
         if (data.session?.user) {
-          const { data: profileData, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', data.session.user.id)
-            .single();
-
-          if (error) {
-            console.error('Error fetching profile:', error);
-          } else if (profileData) {
-            setProfile(profileData);
-            setIsAdmin(profileData.role === 'admin');
-            console.log('User role:', profileData.role);
-            console.log('Is admin:', profileData.role === 'admin');
-          }
+          await fetchUserProfile(data.session.user.id);
         }
       } catch (error) {
         console.error('Error setting data:', error);
@@ -90,20 +118,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         // Check if user is admin when auth state changes
         if (currentSession?.user) {
-          const { data: profileData, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', currentSession.user.id)
-            .single();
-
-          if (error) {
-            console.error('Error fetching profile on auth change:', error);
-          } else if (profileData) {
-            setProfile(profileData);
-            setIsAdmin(profileData.role === 'admin');
-            console.log('User role (auth change):', profileData.role);
-            console.log('Is admin (auth change):', profileData.role === 'admin');
-          }
+          await fetchUserProfile(currentSession.user.id);
         } else {
           setProfile(null);
           setIsAdmin(false);
@@ -128,17 +143,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // Fetch user profile after successful login
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .single();
-
-      if (profileError) {
-        console.error('Error fetching profile after login:', profileError);
-      } else if (profileData) {
-        setProfile(profileData);
-        setIsAdmin(profileData.role === 'admin');
+      if (data.user) {
+        await fetchUserProfile(data.user.id);
       }
 
       return { data, error: null };
@@ -225,6 +231,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     logout,
     updateProfile,
     resetPassword,
+    refreshProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
