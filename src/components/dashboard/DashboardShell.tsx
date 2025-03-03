@@ -50,14 +50,19 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
     return () => window.removeEventListener('resize', checkMobileView);
   }, []);
 
+  // Define navigation based on user role
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { 
+      name: isAdmin ? 'Admin Dashboard' : 'Dashboard', 
+      href: isAdmin ? '/dashboard/admin' : '/dashboard', 
+      icon: isAdmin ? BarChart3 : Home 
+    },
     { name: 'Sevkiyatlarım', href: '/dashboard/shipments', icon: Truck },
     { name: 'Tedarikçilerim', href: '/dashboard/vendors', icon: ShoppingBag },
     { name: 'Konteynırlar', href: '/dashboard/containers', icon: Package2 },
     { name: 'Belgeler', href: '/dashboard/documents', icon: FileText },
     ...(isAdmin
-      ? [{ name: 'Yönetim Paneli', href: '/dashboard/admin', icon: BarChart3 }]
+      ? [{ name: 'Blog Yönetimi', href: '/dashboard/blog', icon: FileText }]
       : []),
     { name: 'Ayarlar', href: '/dashboard/settings', icon: Settings },
   ];
@@ -72,7 +77,15 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
 
   const handleLogout = async () => {
     await logout();
+    navigate('/');
   };
+
+  // Redirect admin users to admin dashboard if they're on the regular dashboard
+  useEffect(() => {
+    if (isAdmin && location.pathname === '/dashboard' && !isLoading) {
+      navigate('/dashboard/admin');
+    }
+  }, [isAdmin, location.pathname]);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -183,6 +196,7 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
                   </div>
                   <div className="hidden text-sm sm:block">
                     <p className="font-medium">{profile?.full_name || user?.email}</p>
+                    {isAdmin && <p className="text-xs text-muted-foreground">Admin</p>}
                   </div>
                 </Button>
               </DropdownMenuTrigger>

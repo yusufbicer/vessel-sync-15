@@ -1,7 +1,7 @@
 
 import { useEffect, ReactNode } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
 interface AuthGuardProps {
@@ -19,16 +19,32 @@ const AuthGuard = ({
 }: AuthGuardProps) => {
   const { user, isLoading, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!isLoading) {
+      console.log('AuthGuard check:', { 
+        user: !!user, 
+        isAdmin, 
+        requireAuth, 
+        requireAdmin, 
+        path: location.pathname 
+      });
+      
       if (requireAuth && !user) {
+        // Redirect to login if authentication is required but user is not logged in
         navigate(redirectTo);
       } else if (requireAdmin && !isAdmin) {
+        // Redirect to dashboard if admin is required but user is not admin
+        console.log('User is not admin, redirecting from admin page');
         navigate('/dashboard');
+      } else if (user && isAdmin && location.pathname === '/dashboard') {
+        // Redirect admin users to admin dashboard if they're on the regular dashboard
+        console.log('Admin user at dashboard, redirecting to admin dashboard');
+        navigate('/dashboard/admin');
       }
     }
-  }, [user, isLoading, isAdmin, navigate, requireAuth, requireAdmin, redirectTo]);
+  }, [user, isLoading, isAdmin, navigate, requireAuth, requireAdmin, redirectTo, location.pathname]);
 
   if (isLoading) {
     return (
@@ -38,12 +54,12 @@ const AuthGuard = ({
     );
   }
 
-  // Kimlik doğrulama gerektiren sayfalar için kullanıcı giriş yapmamışsa null döndür
+  // Return null if auth is required but user is not logged in
   if (requireAuth && !user) {
     return null;
   }
 
-  // Admin gerektiren sayfalar için kullanıcı admin değilse null döndür
+  // Return null if admin is required but user is not admin
   if (requireAdmin && !isAdmin) {
     return null;
   }
