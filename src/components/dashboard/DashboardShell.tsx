@@ -1,3 +1,4 @@
+
 import { useState, ReactNode, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -32,7 +33,7 @@ interface DashboardShellProps {
 }
 
 const DashboardShell = ({ children }: DashboardShellProps) => {
-  const { user, profile, logout, isAdmin, isLoading } = useAuth();
+  const { user, profile, logout, isAdmin } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
   const location = useLocation();
@@ -50,17 +51,13 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
   }, []);
 
   const navigation = [
-    { 
-      name: isAdmin ? 'Admin Dashboard' : 'Dashboard', 
-      href: isAdmin ? '/dashboard/admin' : '/dashboard', 
-      icon: isAdmin ? BarChart3 : Home 
-    },
+    { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Sevkiyatlarım', href: '/dashboard/shipments', icon: Truck },
     { name: 'Tedarikçilerim', href: '/dashboard/vendors', icon: ShoppingBag },
     { name: 'Konteynırlar', href: '/dashboard/containers', icon: Package2 },
     { name: 'Belgeler', href: '/dashboard/documents', icon: FileText },
     ...(isAdmin
-      ? [{ name: 'Blog Yönetimi', href: '/dashboard/blog', icon: FileText }]
+      ? [{ name: 'Yönetim Paneli', href: '/dashboard/admin', icon: BarChart3 }]
       : []),
     { name: 'Ayarlar', href: '/dashboard/settings', icon: Settings },
   ];
@@ -75,17 +72,11 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/');
   };
-
-  useEffect(() => {
-    if (isAdmin && location.pathname === '/dashboard' && !isLoading) {
-      navigate('/dashboard/admin');
-    }
-  }, [isAdmin, location.pathname, navigate, isLoading]);
 
   return (
     <div className="flex min-h-screen bg-background">
+      {/* Mobile Sidebar Backdrop */}
       {isSidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
@@ -93,6 +84,7 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
         />
       )}
 
+      {/* Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 z-50 w-64 transform border-r bg-background transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -139,7 +131,9 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
         </div>
       </div>
 
+      {/* Main Content */}
       <div className="flex flex-1 flex-col lg:pl-64">
+        {/* Top Navbar */}
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur sm:px-6 lg:px-8">
           <button
             className="rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
@@ -148,6 +142,7 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
             <Menu className="h-5 w-5" />
           </button>
 
+          {/* Mobile Navigation Menu */}
           {isMobileView && (
             <div className="flex-1 px-2 lg:hidden">
               <DropdownMenu>
@@ -188,7 +183,6 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
                   </div>
                   <div className="hidden text-sm sm:block">
                     <p className="font-medium">{profile?.full_name || user?.email}</p>
-                    {isAdmin && <p className="text-xs text-muted-foreground">Admin</p>}
                   </div>
                 </Button>
               </DropdownMenuTrigger>
@@ -219,10 +213,12 @@ const DashboardShell = ({ children }: DashboardShellProps) => {
           </div>
         </header>
 
+        {/* Page Content */}
         <main className="flex-1 overflow-auto px-4 py-8 sm:px-6 lg:px-8">
           {children}
         </main>
 
+        {/* Footer */}
         <footer className="border-t px-4 py-4 text-center text-xs text-muted-foreground sm:px-6 lg:px-8">
           © {new Date().getFullYear()} Groop - Tüm Hakları Saklıdır
         </footer>

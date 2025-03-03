@@ -8,7 +8,6 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@/components/ui/card';
 import {
   Table,
@@ -37,7 +36,6 @@ import {
   DollarSign,
   TrendingUp,
   ClipboardList,
-  AlertCircle
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -56,92 +54,55 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchAdminData = async () => {
-      if (!user) return;
-      
-      console.log("Fetching admin data, isAdmin:", isAdmin);
+      if (!user || !isAdmin) return;
 
       try {
         setIsLoading(true);
 
         // Fetch stats
-        const { count: usersCount, error: usersError } = await supabase
+        const { count: usersCount } = await supabase
           .from('profiles')
-          .select('*', { count: 'exact', head: true });
+          .select('id', { count: 'exact', head: true });
 
-        if (usersError) {
-          console.error("Error fetching users count:", usersError);
-          throw usersError;
-        }
-
-        const { count: shipmentsCount, error: shipmentsCountError } = await supabase
+        const { count: shipmentsCount } = await supabase
           .from('shipments')
-          .select('*', { count: 'exact', head: true });
+          .select('id', { count: 'exact', head: true });
 
-        if (shipmentsCountError) {
-          console.error("Error fetching shipments count:", shipmentsCountError);
-          throw shipmentsCountError;
-        }
-
-        const { count: containersCount, error: containersCountError } = await supabase
+        const { count: containersCount } = await supabase
           .from('containers')
-          .select('*', { count: 'exact', head: true });
+          .select('id', { count: 'exact', head: true });
 
-        if (containersCountError) {
-          console.error("Error fetching containers count:", containersCountError);
-          throw containersCountError;
-        }
-
-        const { count: blogPostsCount, error: blogPostsCountError } = await supabase
+        const { count: blogPostsCount } = await supabase
           .from('blog_posts')
-          .select('*', { count: 'exact', head: true });
-
-        if (blogPostsCountError) {
-          console.error("Error fetching blog posts count:", blogPostsCountError);
-          throw blogPostsCountError;
-        }
+          .select('id', { count: 'exact', head: true });
 
         // Fetch recent users
-        const { data: recentUsersData, error: recentUsersError } = await supabase
+        const { data: recentUsersData } = await supabase
           .from('profiles')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(5);
 
-        if (recentUsersError) {
-          console.error("Error fetching recent users:", recentUsersError);
-          throw recentUsersError;
-        }
-
         // Fetch recent shipments
-        const { data: recentShipmentsData, error: recentShipmentsError } = await supabase
+        const { data: recentShipmentsData } = await supabase
           .from('shipments')
           .select(`
             id,
             created_at,
             order_number,
             status,
-            profiles!inner(full_name, email),
-            vendors!inner(name)
+            profiles(full_name, email),
+            vendors(name)
           `)
           .order('created_at', { ascending: false })
           .limit(5);
 
-        if (recentShipmentsError) {
-          console.error("Error fetching recent shipments:", recentShipmentsError);
-          throw recentShipmentsError;
-        }
-
         // Fetch recent blog posts
-        const { data: recentBlogPostsData, error: recentBlogPostsError } = await supabase
+        const { data: recentBlogPostsData } = await supabase
           .from('blog_posts')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(5);
-
-        if (recentBlogPostsError) {
-          console.error("Error fetching recent blog posts:", recentBlogPostsError);
-          throw recentBlogPostsError;
-        }
 
         setStats({
           usersCount: usersCount || 0,
@@ -153,8 +114,6 @@ const AdminDashboard = () => {
         setRecentUsers(recentUsersData || []);
         setRecentShipments(recentShipmentsData || []);
         setRecentBlogPosts(recentBlogPostsData || []);
-
-        console.log("Admin data loaded successfully");
 
       } catch (error) {
         console.error('Admin verisi yüklenirken hata:', error);
@@ -179,7 +138,7 @@ const AdminDashboard = () => {
     return (
       <DashboardShell>
         <div className="flex flex-col items-center justify-center h-96 text-center">
-          <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+          <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
           <h1 className="text-2xl font-bold mb-2">Yetkisiz Erişim</h1>
           <p className="text-muted-foreground mb-6">
             Yönetici paneline erişmek için admin yetkisine sahip olmanız gerekiyor.
